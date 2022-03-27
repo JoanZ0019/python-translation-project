@@ -86,6 +86,22 @@ def get_all_translations(rna_sequence, genetic_code):
         A list of strings; each string is an sequence of amino acids encoded by
         `rna_sequence`.
     """
+    rna_sequence = rna_sequence.upper()
+    number_of_bases = len(rna_sequence)
+    last_codon_index = number_of_bases - 3
+    if last_codon_index < 0:
+        return []
+    amino_acid_seq_list = []
+    for base_index in range(last_codon_index + 1):
+        codon = rna_sequence[base_index: base_index + 3]
+        if codon == "AUG":
+            aa_seq = translate_sequence(
+                    rna_sequence = rna_sequence[base_index:],
+                    genetic_code = genetic_code)
+            if aa_seq:
+                amino_acid_seq_list.append(aa_seq)
+    return amino_acid_seq_list
+
     pass
 
 def get_reverse(sequence):
@@ -178,6 +194,41 @@ def get_longest_peptide(rna_sequence, genetic_code):
         A string of the longest sequence of amino acids encoded by
         `rna_sequence`.
     """
+    rna_sequence = rna_sequence.upper()
+    start_pos = 0
+    longest = ""
+    amino_acids = []
+
+    def translate(start_pos, rna_sequence, genetic_code):
+        proteins = ""
+        for i in range(start_pos, len(rna_sequence), 3):
+            codon = rna_sequence[i:i + 3]
+            if codon in ["UAG", "UAA", "UGA"] or len(codon) != 3:
+                break
+            else:
+                proteins += genetic_code[codon]
+        return proteins
+    
+    def valid_seqs(start_pos, rna_sequence, genetic_code, amino_acids):
+        while start_pos < len(rna_sequence):
+            start_codon = rna_sequence[start_pos:start_pos + 3]
+            if start_codon == "AUG":
+                translation = translate(start_pos, rna_sequence, genetic_code)
+                amino_acids.append(translation)
+            start_pos += 1
+        return amino_acids
+
+    fin = reverse_and_complement(rna_sequence)
+    amino_acids = valid_seqs(start_pos, rna_sequence, genetic_code, amino_acids)
+    amino_acids = valid_seqs(start_pos, fin, genetic_code, amino_acids)
+
+    max_len = -1
+    for seq in amino_acids:
+        if len(seq) > max_len:
+            max_length = len(seq)
+            longest = seq
+    return longest
+
     pass
 
 
