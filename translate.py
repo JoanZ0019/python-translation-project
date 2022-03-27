@@ -41,6 +41,7 @@ def translate_sequence(rna_sequence, genetic_code):
                     resultseq = resultseq + genetic_code[codon]
             elif len(codon) < 3:
                 break
+
     translate = ''
     if len(resultseq) >= 1:
         for i in resultseq:
