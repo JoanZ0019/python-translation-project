@@ -47,11 +47,11 @@ def translate_sequence(rna_sequence, genetic_code):
     if len(resultseq) >= 1:
         for i in resultseq:
             if i != '*':
-                translate = translate + i
+                translated = translated + i
             else:
                 break
     
-    return translate
+    return translated
 
     pass
     
@@ -202,7 +202,7 @@ def get_longest_peptide(rna_sequence, genetic_code):
     longest = ""
     amino_acids = []
 
-    def translate(start_pos, rna_sequence, genetic_code):
+    def translated(start_pos, rna_sequence, genetic_code):
         proteins = ""
         for i in range(start_pos, len(rna_sequence), 3):
             codon = rna_sequence[i:i + 3]
@@ -216,7 +216,7 @@ def get_longest_peptide(rna_sequence, genetic_code):
         while start_pos < len(rna_sequence):
             start_codon = rna_sequence[start_pos:start_pos + 3]
             if start_codon == "AUG":
-                translation = translate(start_pos, rna_sequence, genetic_code)
+                translation = translated(start_pos, rna_sequence, genetic_code)
                 amino_acids.append(translation)
             start_pos += 1
         return amino_acids
