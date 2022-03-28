@@ -42,6 +42,7 @@ def translate_sequence(rna_sequence, genetic_code):
             elif len(codon) < 3:
                 break
 
+
     translate = ''
     if len(resultseq) >= 1:
         for i in resultseq:
@@ -92,6 +93,7 @@ def get_all_translations(rna_sequence, genetic_code):
     if last_codon_index < 0:
         return []
     amino_acid_seq_list = []
+    
     for base_index in range(last_codon_index + 1):
         codon = rna_sequence[base_index: base_index + 3]
         if codon == "AUG":
@@ -122,6 +124,7 @@ def get_reverse(sequence):
         return rev_seq
     else:
         return ''
+    
     pass
 
 def get_complement(sequence):
@@ -138,8 +141,8 @@ def get_complement(sequence):
     """
     if sequence:
         seq = list(sequence.upper())
-        comp = {'C':'G', 'G':'C', 'U':'A', 'A':'U'}
-        seq=[comp[base] for base in seq]
+        complt = {'C':'G', 'G':'C', 'U':'A', 'A':'U'}
+        seq=[complt[base] for base in seq]
         return ''.join(seq)
     else:
         return ''
