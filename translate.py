@@ -30,28 +30,26 @@ def translate_sequence(rna_sequence, genetic_code):
         A string of the translated amino acids.
     """
     resultseq = ''
-    if len(rna_sequence) >= 3:
-        for i in range(0, len(rna_sequence), 3):
-            codon = rna_sequence [i:i+3]
-            codon = codon.upper()
-            if len(codon) == 3:
-                if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
-                    break
-                else: 
-                    resultseq = resultseq + genetic_code[codon]
-            elif len(codon) < 3:
+    for i in range(0, len(rna_sequence), 3):
+        codon = rna_sequence [i:i+3]
+        codon = codon.upper()
+        if len(codon) == 3:
+            if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
                 break
+            else: 
+                resultseq = resultseq + genetic_code[codon]
+        elif len(codon) < 3:
+            break
 
 
     translate = ''
-    if len(resultseq) >= 1:
-        for i in resultseq:
-            if i != '*':
-                translated = translated + i
-            else:
-                break
+    for i in resultseq:
+        if i != '*':
+            translate = translate + i
+        else:
+            break
     
-    return translated
+    return translate
 
     pass
     
