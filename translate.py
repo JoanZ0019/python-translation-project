@@ -1,6 +1,5 @@
 #!/usr/bin/env
 import sys
-#rna_sequence = 'ACCACCACCACCACCUAAACCACCACC'
 def translate_sequence(rna_sequence, genetic_code):
     protein = ""
     for i in range(0, len(rna_sequence), 3):
@@ -68,20 +67,17 @@ def get_all_translations(rna_sequence, genetic_code):
         `rna_sequence`.
     """
     rna_sequence = rna_sequence.upper()
-    number_of_bases = len(rna_sequence)
-    last_codon_index = number_of_bases - 3
-    if last_codon_index < 0:
+    if len(rna_sequence) <3:
         return []
     amino_acid_seq_list = []
     
-    for base_index in range(last_codon_index + 1):
-        codon = rna_sequence[base_index: base_index + 3]
+    for i in range(len(rna_sequence)-1):
+        codon = rna_sequence[i: i + 3]
         if codon == "AUG":
             aa_seq = translate_sequence(
-                    rna_sequence = rna_sequence[base_index:],
+                    rna_sequence = rna_sequence[i:],
                     genetic_code = genetic_code)
-            if aa_seq:
-                amino_acid_seq_list.append(aa_seq)
+            amino_acid_seq_list.append(aa_seq)
     return amino_acid_seq_list
 
     pass
@@ -235,6 +231,7 @@ if __name__ == '__main__':
             "ACA"
             "GCG")
     rna_seq = ("ACC"
+            "AUG"
             "ACC"
             "ACC"
             "ACC"
@@ -252,4 +249,4 @@ if __name__ == '__main__':
     sys.stdout.write(message)
     if longest_peptide == "MYWHATAPYTHQNISTA":
         sys.stdout.write("Indeed.\n")
-    translate_sequence(rna_seq, genetic_code)
+    get_all_translations(rna_seq, genetic_code)
