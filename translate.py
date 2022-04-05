@@ -71,7 +71,7 @@ def get_all_translations(rna_sequence, genetic_code):
         return []
     amino_acid_seq_list = []
     
-    for i in range(len(rna_sequence)-1):
+    for i in range(len(rna_sequence)-2):
         codon = rna_sequence[i: i + 3]
         if codon == "AUG":
             aa_seq = translate_sequence(
