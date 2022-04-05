@@ -1,9 +1,15 @@
-#! /usr/bin/env python3
-
+#!/usr/bin/env
 import sys
-
+#rna_sequence = 'ACCACCACCACCACCUAAACCACCACC'
 def translate_sequence(rna_sequence, genetic_code):
-    
+    protein = ""
+    for i in range(0, len(rna_sequence), 3):
+        codon = rna_sequence[i:i+3]
+        if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
+            print(protein)
+            break
+        protein += genetic_code[codon]
+
     """Translates a sequence of RNA into a sequence of amino acids.
 
     Translates `rna_sequence` into string of amino acids, according to the
@@ -29,30 +35,6 @@ def translate_sequence(rna_sequence, genetic_code):
     str
         A string of the translated amino acids.
     """
-    resultseq = ''
-    for i in range(0, len(rna_sequence), 3):
-        codon = rna_sequence [i:i+3]
-        codon = codon.upper()
-        if len(codon) == 3:
-            if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
-                break
-            else: 
-                resultseq = resultseq + genetic_code[codon]
-        elif len(codon) < 3:
-            break
-
-
-    translate = ''
-    for i in resultseq:
-        if i != '*':
-            translate = translate + i
-        else:
-            break
-    
-    return translate
-
-    pass
-    
 
 def get_all_translations(rna_sequence, genetic_code):
     """Get a list of all amino acid sequences encoded by an RNA sequence.
@@ -116,10 +98,10 @@ def get_reverse(sequence):
     >>> get_reverse('AUGC')
     'CGUA'
     """
-    if sequence:
+    if len(sequence)>=1:
         seq = sequence.upper()
-        rev_seq = seq[::-1]
-        return rev_seq
+        reversed_seq = seq[::-1]
+        return reversed_seq
     else:
         return ''
     
@@ -137,10 +119,10 @@ def get_complement(sequence):
     >>> get_complement('AUGC')
     'UACG'
     """
-    if sequence:
+    if len(sequence)>=1:
         seq = list(sequence.upper())
-        complt = {'C':'G', 'G':'C', 'U':'A', 'A':'U'}
-        seq=[complt[base] for base in seq]
+        complement = {'A':'U', 'C':'G', 'U':'A', 'G':'C'}
+        seq=[complement[base] for base in seq]
         return ''.join(seq)
     else:
         return ''
@@ -160,10 +142,10 @@ def reverse_and_complement(sequence):
     >>> reverse_and_complement('AUGC')
     'GCAU'
     """
-    if sequence:
-        re_seq = get_reverse(sequence)
-        rc_seq = get_complement(re_seq)
-        return rc_seq
+    if len(sequence)>=1:
+        reversed_seq = get_reverse(sequence)
+        reversed_complement_seq = get_complement(reversed_seq)
+        return reversed_complement_seq
     else:
         return''
     pass
@@ -252,6 +234,15 @@ if __name__ == '__main__':
             "AGU"
             "ACA"
             "GCG")
+    rna_seq = ("ACC"
+            "ACC"
+            "ACC"
+            "ACC"
+            "ACC"
+            "UAA"
+            "ACC"
+            "ACC"   
+            "ACC")
     longest_peptide = get_longest_peptide(rna_sequence = rna_seq,
             genetic_code = genetic_code)
     assert isinstance(longest_peptide, str), "Oops: the longest peptide is {0}, not a string".format(longest_peptide)
@@ -261,3 +252,4 @@ if __name__ == '__main__':
     sys.stdout.write(message)
     if longest_peptide == "MYWHATAPYTHQNISTA":
         sys.stdout.write("Indeed.\n")
+    translate_sequence(rna_seq, genetic_code)
