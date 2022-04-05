@@ -2,12 +2,14 @@
 import sys
 def translate_sequence(rna_sequence, genetic_code):
     protein = ""
-    for i in range(0, len(rna_sequence), 3):
-        codon = rna_sequence[i:i+3]
-        if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
-            print(protein)
-            break
-        protein += genetic_code[codon]
+    if len(rna_sequence) >= 3:
+        for i in range(0, len(rna_sequence)-1, 3):
+            codon = rna_sequence[i:i+3]
+            codon = codon.upper()
+            if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
+                break
+            protein += genetic_code[codon]
+    return protein
 
     """Translates a sequence of RNA into a sequence of amino acids.
 
@@ -67,7 +69,7 @@ def get_all_translations(rna_sequence, genetic_code):
         `rna_sequence`.
     """
     rna_sequence = rna_sequence.upper()
-    if len(rna_sequence) <3:
+    if len(rna_sequence) < 3:
         return []
     amino_acid_seq_list = []
     
@@ -179,32 +181,31 @@ def get_longest_peptide(rna_sequence, genetic_code):
     amino_acids = []
 
     def translated(start_pos, rna_sequence, genetic_code):
-        proteins = ""
+        amino_acids = ""
         for i in range(start_pos, len(rna_sequence), 3):
             codon = rna_sequence[i:i + 3]
             if codon in ["UAG", "UAA", "UGA"] or len(codon) != 3:
                 break
             else:
-                proteins += genetic_code[codon]
-        return proteins
+                amino_acids += genetic_code[codon]
+        return amino_acids
     
     def valid_seqs(start_pos, rna_sequence, genetic_code, amino_acids):
         while start_pos < len(rna_sequence):
             start_codon = rna_sequence[start_pos:start_pos + 3]
             if start_codon == "AUG":
-                translation = translated(start_pos, rna_sequence, genetic_code)
-                amino_acids.append(translation)
+                amino_acid = translated(start_pos, rna_sequence, genetic_code)
+                amino_acids.append(amino_acid)
             start_pos += 1
         return amino_acids
 
-    fin = reverse_and_complement(rna_sequence)
-    amino_acids = valid_seqs(start_pos, rna_sequence, genetic_code, amino_acids)
-    amino_acids = valid_seqs(start_pos, fin, genetic_code, amino_acids)
+    rc_sequence = reverse_and_complement(rna_sequence)
+    amino_acids = valid_seqs(start_pos, rc_sequence, genetic_code, amino_acids)
 
-    max_len = -1
+    max_len = 0
     for seq in amino_acids:
         if len(seq) > max_len:
-            max_length = len(seq)
+            max_len = len(seq)
             longest = seq
     return longest
 
@@ -230,16 +231,6 @@ if __name__ == '__main__':
             "AGU"
             "ACA"
             "GCG")
-    rna_seq = ("ACC"
-            "AUG"
-            "ACC"
-            "ACC"
-            "ACC"
-            "ACC"
-            "UAA"
-            "ACC"
-            "ACC"   
-            "ACC")
     longest_peptide = get_longest_peptide(rna_sequence = rna_seq,
             genetic_code = genetic_code)
     assert isinstance(longest_peptide, str), "Oops: the longest peptide is {0}, not a string".format(longest_peptide)
@@ -249,4 +240,3 @@ if __name__ == '__main__':
     sys.stdout.write(message)
     if longest_peptide == "MYWHATAPYTHQNISTA":
         sys.stdout.write("Indeed.\n")
-    get_all_translations(rna_seq, genetic_code)
