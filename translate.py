@@ -3,12 +3,17 @@ import sys
 def translate_sequence(rna_sequence, genetic_code):
     protein = ""
     if len(rna_sequence) >= 3:
-        for i in range(0, len(rna_sequence)-1, 3):
+        for i in range(0, len(rna_sequence), 3):
             codon = rna_sequence[i:i+3]
             codon = codon.upper()
-            if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
+            if len(codon) ==3:
+                if codon == 'UAA' or codon == 'UGA' or codon == 'UAG':
+                    break
+                else:
+                    protein += genetic_code[codon]
+            elif len(codon) < 3:
                 break
-            protein += genetic_code[codon]
+        
     return protein
 
     """Translates a sequence of RNA into a sequence of amino acids.
@@ -146,7 +151,6 @@ def reverse_and_complement(sequence):
         return reversed_complement_seq
     else:
         return''
-    pass
 
 def get_longest_peptide(rna_sequence, genetic_code):
     """Get the longest peptide encoded by an RNA sequence.
@@ -200,8 +204,8 @@ def get_longest_peptide(rna_sequence, genetic_code):
         return amino_acids
 
     rc_sequence = reverse_and_complement(rna_sequence)
+    amino_acids = valid_seqs(start_pos, rna_sequence, genetic_code, amino_acids)
     amino_acids = valid_seqs(start_pos, rc_sequence, genetic_code, amino_acids)
-
     max_len = 0
     for seq in amino_acids:
         if len(seq) > max_len:
@@ -209,7 +213,6 @@ def get_longest_peptide(rna_sequence, genetic_code):
             longest = seq
     return longest
 
-    pass
 
 
 if __name__ == '__main__':
